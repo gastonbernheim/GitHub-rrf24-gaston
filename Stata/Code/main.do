@@ -3,7 +3,7 @@
 *******************************************************************************/
 
 	* Set version
-	*version ???
+	version 18.5
 
 	* Set project global(s)	
 	// User: Gaston Bernheim 
@@ -21,8 +21,9 @@
 	global code 	"${github}/Stata/Code"
 	global outputs 	"${github}/Stata/Outputs"
 	
+	* Ado path
 	sysdir set PLUS "$code/ado"
-
+	mata: mata mlib index
 
 	* Install packages 
 	local user_commands	ietoolkit iefieldkit winsor sumstats estout keeporder grc1leg2 //Add required user-written commands
