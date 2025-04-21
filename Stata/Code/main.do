@@ -3,16 +3,16 @@
 *******************************************************************************/
 
 	* Set version
-	*version ???
+	version 18.5
 
 	* Set project global(s)	
-	// User: you 
+	// User: Gaston Bernheim 
 	display "`c(username)'" 	//Check username and copy to set project globals by user
 	
 	* Add file paths to DataWork folder and the Github folder for RRF2024
-	if "`c(username)'" == "" {
-        *global onedrive "???/DataWork"
-		global github 	"???/GitHub-rrf-24"
+	if "`c(username)'" == "wb639770" {
+        global onedrive "C:/Users/wb639770/OneDrive - WBG/RRF 2024/DataWork"
+		global github 	"C:/Users/wb639770/OneDrive - WBG/RRF 2024/GitHub-rrf24-gaston"
     }
 	
 	
@@ -21,8 +21,9 @@
 	global code 	"${github}/Stata/Code"
 	global outputs 	"${github}/Stata/Outputs"
 	
-	sysdir set PLUS "???"
-
+	* Ado path
+	sysdir set PLUS "$code/ado"
+	mata: mata mlib index
 
 	* Install packages 
 	local user_commands	ietoolkit iefieldkit winsor sumstats estout keeporder grc1leg2 //Add required user-written commands
