@@ -3,19 +3,35 @@
 * Loading data
 *------------------------------------------------------------------------------- 	
 	
-	* Load TZA_CCT_baseline.dta
-	use "${data}/???", clear
+	* Load TZA_CCT_baseline.csv
+	import delimited "${data}/Raw/TZA_CCT_baseline.csv", clear
 	
+	*Save dataset as .dta
+	save "${data}/Raw/TZA_CCT_baseline.dta", replace
+	
+	* Load TZA_CCT_baseline.dta
+	use "${data}/Raw/TZA_CCT_baseline.dta", clear
+
+*-------------------------------------------------------------------------------	
+* Explore data
+*------------------------------------------------------------------------------- 		
+
+	* Describe data
+	describe
+	
+	* Summarize data
+	summarize
+
 *-------------------------------------------------------------------------------	
 * Checking for unique ID and fixing duplicates
 *------------------------------------------------------------------------------- 		
 
 	* Identify duplicates 
-	ieduplicates	??? ///
-					using "${outputs}/duplicates.xlsx", ///
-					uniquevars(???) ///
-					keepvars(???) ///
-					nodaily
+		ieduplicates	hhid ///
+						using "${outputs}/duplicates.xlsx", ///
+						uniquevars(key) ///
+						keepvars(*) ///
+						nodaily
 					
 	
 *-------------------------------------------------------------------------------	
@@ -23,7 +39,7 @@
 *------------------------------------------------------------------------------- 							
 	
 	* IDs
-	local ids 		???	
+	local ids 		???
 	
 	* Unit: household
 	local hh_vars 	???

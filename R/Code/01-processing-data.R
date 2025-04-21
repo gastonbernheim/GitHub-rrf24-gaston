@@ -2,49 +2,79 @@
 # 01. Data processing
 
 ### Libraries
-# library(haven)
-# library(dplyr)
-# library(tidyr)
-# library(stringr)
-# library(labelled)
+library(haven)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(labelled)
 
 ### Loading data ----
 
 # Load the dataset
-data_path <- "ADD-YOUR-PATH"
-data      <- read_dta(file.path(data_path, "Raw/TZA_CCT_baseline.dta"))
 
-### Remove duplicates based on hhid
-data_dedup <- data %>%
-    ......
+# Exercise 1: Explore the data ---
+data_path <- "C:/Users/wb639770/OneDrive - WBG/RRF 2024/DataWork/Data/"
+data      <- read.csv(file.path(data_path, "Raw/TZA_CCT_baseline.csv"))
+#data      <- read_dta(file.path(data_path, "Raw/TZA_CCT_baseline.dta"))
+
+glimpse(data)
+
+# Exercise 2: Remove duplicates based on hhid
+
+# Identify and display duplicate hhid values
+duplicates <- data %>%
+    group_by(hhid) %>%
+    filter(n() > 1)
+
+# Exercise 3: Clean data
+
+data_clean <- data %>%
+    distinct(hhid, .keep_all = TRUE)
 
 ### Household (HH) level data ----
 
-#### Tidying data for HH level
-data_tidy_hh <- data_dedup %>%
-    ......
-
 ### Data cleaning for Household-member (HH-member) level
-data_clean_hh <- data_tidy_hh %>%
-    # Convert submissionday to date
-    mutate(...... = as.Date(......, format = "%Y-%m-%d %H:%M:%S")) %>%
-    # Convert duration to numeric (if it is not already)
-    mutate(......) %>%
-    # Convert ar_farm_unit to factor (categorical data)
-    mutate(......) %>%
-    # Replace values in the crop variable based on crop_other using regex for new crops
+data_clean_hh <- data_clean %>%
+    mutate(crop_other = str_to_title(crop_other)) %>%
+    # Replace values in the crop variable based on crop_other using regex for new cropS
     mutate(crop = case_when(
-        ......
+        str_detect(crop_other, "Coconut") ~ 40,
+        str_detect(crop_other, "Sesame") ~ 41,
+        TRUE ~ crop
     )) %>%
     # Recode negative numeric values (-88) as missing (NA)
-    mutate(across(......)) %>%
+    mutate(across(where(is.numeric), ~ replace(., . == -88, NA)))
+
+# Identify outliers
+#area
+boxplot.stats(data_clean_hh$ar_farm)
+
+#consumption
+boxplot.stats(data_clean_hh$food_cons)    
+
+#### Tidying data for HH level
+#data_tidy_hh <- data_dedup %>%
+#   ......
+
+    # Convert submissionday to date
+    #mutate(...... = as.Date(......, format = "%Y-%m-%d %H:%M:%S")) %>%
+    # Convert duration to numeric (if it is not already)
+    #mutate(......) %>%
+    # Convert ar_farm_unit to factor (categorical data)
+    #mutate(......) %>%
+    # Replace values in the crop variable based on crop_other using regex for new crops
+    #mutate(crop = case_when(
+    #    ......
+    #)) %>%
+    # Recode negative numeric values (-88) as missing (NA)
+    #mutate(across(......) ) %>%
     # Add variable labels
-    set_variable_labels(
-        ......
-    )
+    #set_variable_labels(
+    #    ......
+    #)
 
 # Save the household data
-write_dta(data_clean_hh, file.path(data_path, "Intermediate/TZA_CCT_HH.dta"))
+write.csv(data_clean_hh, file.path(data_path, "Intermediate/TZA_CCT_HH.csv"), row.names = FALSE)
 
 ### Household member (HH-member) level data ----
 
