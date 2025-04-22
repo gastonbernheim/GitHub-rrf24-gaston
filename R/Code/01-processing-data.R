@@ -15,7 +15,7 @@ library(labelled)
 # Exercise 1: Explore the data ---
 data_path <- "C:/Users/wb639770/OneDrive - WBG/RRF 2024/DataWork/"
 data      <- read.csv(file.path(data_path, "Data/Raw/TZA_CCT_baseline.csv"))
-#data      <- read_dta(file.path(data_path, "Raw/TZA_CCT_baseline.dta"))
+#data      <- read_dta(file.path(data_path, "Data/Raw/TZA_CCT_baseline.dta"))
 
 glimpse(data)
 
