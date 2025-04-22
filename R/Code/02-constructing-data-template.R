@@ -10,29 +10,29 @@ library(tidyverse)
 
 # Preliminary - Load Data ----
 # Load Household (HH) data
-hh_data <- read.csv("C:/Users/wb639770/Downloads/Reproducible Research Fundamentals - DIME World Bank/Hands-on activities/2. Construction Hands-on/Data/Intermediate/")
+hh_data <- read.csv(file.path(data_path, "Data - Construction/Intermediate/TZA_CCT_HH.csv"))
 
 # Load Household-Member data (if applicable)
 # member_data <- read.csv("path/to/your/member_data.csv")
 
 # Exercise 1: Standardize Conversion Values ----
 # Define conversion rates (update if needed)
-acre_conv <- YOUR_CONVERSION_FACTOR  # e.g., 2.47 for hectare to acre
-usd_conv <- YOUR_CURRENCY_CONVERSION  # e.g., 0.00037 for local currency to USD
+acre_conv <- 2.47  # e.g., 2.47 for hectare to acre
+usd_conv <- 0.00037  # e.g., 0.00037 for local currency to USD
 
 # Data Construction: Household-Level ----
 
 # Convert units (e.g., farming area from hectares to acres)
 hh_data <- hh_data %>%
     mutate(area_acre = case_when(
-        area_unit_column == "Acre" ~ area_variable,  # If already in acres
-        area_unit_column == "Hectare" ~ area_variable * acre_conv  # Convert hectares to acres
+        ar_farm_unit == "Acre" ~ ar_farm,  # If already in acres
+        ar_farm_unit == "Hectare" ~ ar_farm * acre_conv  # Convert hectares to acres
     )) %>%
     mutate(area_acre = replace_na(area_acre, 0)) 
 
 # Convert consumption values to USD (or other currency)
 hh_data <- hh_data %>%
-    mutate(across(c(food_consumption, nonfood_consumption), 
+    mutate(across(c(food_cons, nonfood_cons), 
                   ~ .x * usd_conv, 
                   .names = "{.col}_usd"))
 
@@ -61,7 +61,7 @@ winsor_function <- function(dataset, var, min = 0.05, max = 0.95){
 }
 
 # Apply Winsorization to selected variables
-win_vars <- c("area_acre", "food_consumption_usd", "nonfood_consumption_usd")  # Replace with actual column names
+win_vars <- c("area_acre", "food_cons_usd", "nonfood_cons_usd")  # Replace with actual column names
 
 for (var in win_vars) {
     hh_data <- winsor_function(hh_data, var)
@@ -70,16 +70,16 @@ for (var in win_vars) {
 # Exercise 3: Merge Household and Treatment Data ----
 
 # Load treatment status data
-treat_status <- read.csv("path/to/your/treatment_data.csv")
+treat_status <- read.csv(file.path(data_path, "Data - Construction/Raw/treat_status.csv"))
 
 # Merge household data with treatment data
 final_hh_data <- hh_data %>%
-    left_join(treat_status, by = "merge_column")  # Replace 'merge_column' with actual key column
+    left_join(treat_status, by = "vid")  # Replace 'merge_column' with actual key column
 
 # Exercise 4: Save Final Dataset ----
 
 # Save the final cleaned and merged dataset
-write.csv(final_hh_data, "path/to/your/final_data.csv", row.names = FALSE)
+write.csv(final_hh_data, file.path(data_path, "Data - Construction/Final/TZA_CCT_analysis.csv"), row.names = FALSE)
 
 # Notes:
 # - Ensure all file paths are correct.
