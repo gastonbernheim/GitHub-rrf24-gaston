@@ -13,9 +13,9 @@ library(labelled)
 # Load the dataset
 
 # Exercise 1: Explore the data ---
-data_path <- "C:/Users/wb639770/OneDrive - WBG/RRF 2024/DataWork/Data/"
-data      <- read.csv(file.path(data_path, "Raw/TZA_CCT_baseline.csv"))
-#data      <- read_dta(file.path(data_path, "Raw/TZA_CCT_baseline.dta"))
+data_path <- "C:/Users/wb639770/OneDrive - WBG/RRF 2024/DataWork/"
+data      <- read.csv(file.path(data_path, "Data/Raw/TZA_CCT_baseline.csv"))
+#data      <- read_dta(file.path(data_path, "Data/Raw/TZA_CCT_baseline.dta"))
 
 glimpse(data)
 
@@ -74,7 +74,7 @@ boxplot.stats(data_clean_hh$food_cons)
     #)
 
 # Save the household data
-write.csv(data_clean_hh, file.path(data_path, "Intermediate/TZA_CCT_HH.csv"), row.names = FALSE)
+write.csv(data_clean_hh, file.path(data_path, "Data/Intermediate/TZA_CCT_HH.csv"), row.names = FALSE)
 
 ### Household member (HH-member) level data ----
 
